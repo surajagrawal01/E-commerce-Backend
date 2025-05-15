@@ -5,7 +5,7 @@ app.use(express.json())
 app.use(cors())
 const portNo = 3089
 //express-validator for server side validation
-const {validationResult, checkSchema} = require('express-validator')
+const { validationResult, checkSchema } = require('express-validator')
 
 //for accessing products image
 app.use('/images', express.static('./public/images'));
@@ -15,6 +15,18 @@ const products = require("./data/products")
 
 //validation schema for user information
 const orderValidationSchema = require("./validators/order-validation")
+
+app.get('/', async (req, res) => {
+    try {
+        res.json({
+            status: 200,
+            info: 'Welcome to E-Commerce App'
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'something went wrong' })
+    }
+})
 
 //api to get the product details
 app.get('/api/products', async (req, res) => {
@@ -29,15 +41,15 @@ app.get('/api/products', async (req, res) => {
 })
 
 //api for placing order
-app.post('/api/place-orders', checkSchema(orderValidationSchema) ,(req, res)=>{
+app.post('/api/place-orders', checkSchema(orderValidationSchema), (req, res) => {
     const body = req.body
     const errors = validationResult(req)
-    if(!errors.isEmpty()){
-        return res.status(400).json({error:errors.array()})
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ error: errors.array() })
     }
     res.json({
-        data:body,
-        status:'Order Placed Successful'
+        data: body,
+        status: 'Order Placed Successful'
     })
 })
 
